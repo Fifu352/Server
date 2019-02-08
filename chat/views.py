@@ -10,13 +10,13 @@ from django.utils import timezone
 
 
 def handler(request):
-    how_many_days: int = 10
-    lastid: int = request.GET.get('lastid', None)
-    content: str = request.GET.get('content', None)
+    how_many_days= 10
+    lastid= request.GET.get('lastid', None)
+    content= request.GET.get('content', None)
     Mes.objects.filter(created_at__lte=timezone.now() - timedelta(days=how_many_days)).delete()
 
     if lastid is not None and content is not None:
-        new_item: Mes = Mes(
+        new_item = Mes(
             id=lastid, name=request.GET.get('name'), content=content,
             created_at=timezone.now(),
             updated_at=timezone.now()
@@ -24,8 +24,8 @@ def handler(request):
         new_item.save()
 
     if lastid is not None:
-        filtered_data: QuerySet = Mes.objects.filter(id__gte=lastid).values()
-        response_data: List = list(filtered_data.values())
+        filtered_data = Mes.objects.filter(id__gte=lastid).values()
+        response_data = list(filtered_data.values())
         response = JsonResponse(response_data, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS, POST, PUT, DELETE, "
